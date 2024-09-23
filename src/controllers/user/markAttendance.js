@@ -1,16 +1,21 @@
 const Attendance = require('../../models/attendanceModel');
 const { ApiError } = require('../../utils/apiError');
-const LeaveRequest = require('../../models/leaveRequestModel.js');
 
+// Mark Attendance
 exports.markAttendance = async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    if (await Attendance.hasMarkedAttendance(userId)) {
-      return next(new ApiError(400, 'Attendance already marked for today'));
+    const studentId = req.userId; 
+    const { status } = req.body;
+
+    
+    if (status !== 'present' && status !== 'Absent' && status !== 'leave') {
+      return res.status(400).json({ message: 'Invalid status. ' });
     }
-    await Attendance.markAttendance(userId);
-    res.status(201).json({ message: 'Attendance marked' });
+
+    const attendanceId = await Attendance.markAttendance(studentId, status);
+    res.status(201).json({ message: 'Attendance marked successfully', attendanceId });
   } catch (err) {
-    next(new ApiError(500, 'Error marking attendance'));
+    console.error('Error marking attendance:', err);
+    next(new ApiError(500, 'Attendance marking failed'));
   }
 };

@@ -1,15 +1,10 @@
-const mysql = require('mysql');
+const mysql = require('mysql2/promise'); // Use mysql2 for promise support
 
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'password',
-  database: 'attendance_system'
-});
-
-connection.connect(err => {
-  if (err) throw err;
-  console.log('MySQL Connected...');
+  password: '12345',
+  database: 'project1'
 });
 
 module.exports = connection;

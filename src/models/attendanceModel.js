@@ -1,20 +1,18 @@
 const pool = require('../../config/db');
 
-exports.markAttendance = async (userId) => {
-  const today = new Date().toISOString().split('T')[0];
-  await pool.query(
-    'INSERT INTO attendance (userId, date, status) VALUES (?, ?, ?)', 
-    [userId, today, 'present']
-  );
+const Attendance = {
+  markAttendance: async (studentId, status) => {
+    const [result] = await pool.query(
+      'INSERT INTO attendance (studentId, status, date) VALUES (?, ?, NOW())',
+      [studentId, status]
+    );
+    return result.insertId;
+  },
+
+  getAttendanceByStudentId: async (studentId) => {
+    const [rows] = await pool.query('SELECT * FROM attendance WHERE studentId = ?', [studentId]);
+    return rows;
+  },
 };
 
-exports.getAttendanceByUser = async (userId) => {
-  const [rows] = await pool.query('SELECT * FROM attendance WHERE userId = ?', [userId]);
-  return rows;
-};
-
-exports.hasMarkedAttendance = async (userId) => {
-  const today = new Date().toISOString().split('T')[0];
-  const [rows] = await pool.query('SELECT * FROM attendance WHERE userId = ? AND date = ?', [userId, today]);
-  return rows.length > 0;
-};
+module.exports = Attendance;

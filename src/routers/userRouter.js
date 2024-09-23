@@ -1,13 +1,16 @@
 const express = require('express');
-const markAttendance = require('../controllers/user/markAttendance');
-const viewAttendance = require('../controllers/user/viewAttendance ');
-const requestLeave = require('../controllers/user/requestLeave');
-const { protect } = require('../middlewares/authMiddleware');
-
 const router = express.Router();
+const upload = require('../middlewares/upload'); 
+const authenticateToken = require('../middlewares/authMiddleware'); 
+const { updateUserProfileImage } = require('../controllers/user/updateProfilePicture');
+const { markAttendance } = require('../controllers/user/markAttendance');
+const { getAttendance } = require('../controllers/user/viewAttendance ');
+const { requestLeave } = require('../controllers/user/requestLeave');
 
-router.post('/attendance', protect, markAttendance);
-router.get('/attendance', protect, viewAttendance);
-router.post('/leave', protect, requestLeave);
+router.post('/uploadImage', authenticateToken, upload.single('profilePicture'), updateUserProfileImage);
+router.post('/markAttendance', authenticateToken, markAttendance);
+router.post('/leaverequest', authenticateToken, requestLeave);
+
+router.get('/viewAttendance', authenticateToken, getAttendance);
 
 module.exports = router;
