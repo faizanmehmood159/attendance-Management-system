@@ -8,7 +8,7 @@ exports.markAttendance = async (req, res, next) => {
     const { status } = req.body;
 
     
-    if (status !== 'present' && status !== 'Absent' && status !== 'leave') {
+    if (status !== 'Present' && status !== 'Absent' && status !== 'leave') {
       return res.status(400).json({ message: 'Invalid status. ' });
     }
 

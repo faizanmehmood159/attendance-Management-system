@@ -1,15 +1,15 @@
 const pool = require('../../config/db');
 
 exports.createLeaveRequest = async (userId, leaveData) => {
-  const { leaveType, reason, startDate, endDate } = leaveData;
+  const { leave_type, reason, startDate, endDate } = leaveData;
   await pool.query(
-    'INSERT INTO leave_requests (userId, leaveType, reason, startDate, endDate, status) VALUES (?, ?, ?, ?, ?, ?)', 
-    [userId, leaveType, reason, startDate, endDate, 'pending']
+    'INSERT INTO leave_requests (user_id, leave_type, reason, start_date, end_date, status) VALUES (?, ?, ?, ?, ?, ?)', 
+    [userId, leave_type, reason, startDate, endDate, 'pending']
   );
 };
 
 
-exports.getLeaveRequests = async () => {
+exports.getAllLeaveRequests = async () => {
   const [rows] = await pool.query('SELECT * FROM leave_requests');
   return rows;
 };

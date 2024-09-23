@@ -1,18 +1,87 @@
-const pool = require('../../config/db');
+const pool = require("../../config/db");
 
 const Attendance = {
   markAttendance: async (studentId, status) => {
     const [result] = await pool.query(
-      'INSERT INTO attendance (studentId, status, date) VALUES (?, ?, NOW())',
+      "INSERT INTO attendance (studentId, status, date) VALUES (?, ?, NOW())",
       [studentId, status]
     );
     return result.insertId;
   },
 
   getAttendanceByStudentId: async (studentId) => {
-    const [rows] = await pool.query('SELECT * FROM attendance WHERE studentId = ?', [studentId]);
+    const [rows] = await pool.query(
+      "SELECT * FROM attendance WHERE studentId = ?",
+      [studentId]
+    );
     return rows;
   },
-};
 
-module.exports = Attendance;
+  updateAttendanceStatusByStudentId: async (studentId, status) => {
+    const [result] = await pool.query(
+      "UPDATE attendance SET status = ? WHERE studentId = ?",
+      [status, studentId]
+    );
+    return result;
+  },
+  deleteAttendanceById: async (attendanceId) => {
+    const [result] = await pool.query("DELETE FROM attendance WHERE id = ?", [
+      attendanceId,
+    ]);
+    return result;
+  },
+
+  deleteAttendanceByStudentId: async (studentId) => {
+    const [result] = await pool.query(
+      "DELETE FROM attendance WHERE studentId = ?",
+      [studentId]
+    );
+    return result;
+  },
+
+  getAttendanceCounts: async (studentId) => {
+    const [rows] = await pool.query(`
+      SELECT UPPER(status) as status, COUNT(*) as count 
+      FROM attendance 
+      WHERE studentId = ? 
+      GROUP BY UPPER(status)
+    `, [studentId]);
+  
+    return rows.reduce((acc, row) => {
+      acc[row.status] = row.count; // Build a counts object
+      return acc;
+    }, {});
+  },
+
+
+  getAllStudentsAttendanceCounts: async () => {
+    const [rows] = await pool.query(`
+      SELECT u.id as studentId, u.name, 
+             UPPER(a.status) as status, 
+             COUNT(*) as count 
+      FROM user u
+      LEFT JOIN attendance a ON u.id = a.studentId
+      GROUP BY u.id, UPPER(a.status)
+    `);
+
+    const counts = {};
+    rows.forEach(row => {
+      if (!counts[row.studentId]) {
+        counts[row.studentId] = {
+          studentId: row.studentId,
+          name: row.name,
+          attendanceCounts: {}
+        };
+      }
+      counts[row.studentId].attendanceCounts[row.status] = row.count || 0; 
+    });
+
+    return Object.values(counts); 
+  },
+};
+  
+
+
+
+
+  (module.exports = Attendance);

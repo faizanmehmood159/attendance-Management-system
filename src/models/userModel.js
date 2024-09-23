@@ -19,4 +19,8 @@ exports.getUserById = async (id) => {
   return rows[0];
 };
 
-
+// Function to get all users' data
+exports.getAllUsers = async () => {
+  const [rows] = await pool.query('SELECT * FROM users');
+  return rows;
+};
