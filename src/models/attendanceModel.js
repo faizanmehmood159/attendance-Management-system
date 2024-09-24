@@ -54,7 +54,7 @@ const Attendance = {
   },
 
 
-  getAllStudentsAttendanceCounts: async () => {
+  getAllStudentsAttendanceCounts: async (studentId) => {
     const [rows] = await pool.query(`
       SELECT u.id as studentId, u.name, 
              UPPER(a.status) as status, 
@@ -77,6 +77,31 @@ const Attendance = {
     });
 
     return Object.values(counts); 
+  },
+  getAttendanceByStudentIdAndDateRange: async (studentId, fromDate, toDate) => {
+    const query = `
+      SELECT * FROM attendance
+      WHERE studentId = ? AND date BETWEEN ? AND ?;
+    `;
+    
+    const [records] = await pool.query(query, [studentId, fromDate, toDate]);
+    return records;
+  },
+  
+
+  calculateGrade : (totalDaysAttended) => {
+    
+    if (totalDaysAttended >= 26) {
+      return 'A';
+    } else if (totalDaysAttended >= 20) {
+      return 'B';
+    } else if (totalDaysAttended >= 15) {
+      return 'C';
+    } else if (totalDaysAttended >= 10) {
+      return 'D';
+    } else {
+      return 'F';
+    }
   },
 };
   
