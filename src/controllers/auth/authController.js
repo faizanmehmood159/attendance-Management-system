@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { ApiError } = require('../../utils/apiError');
 const path = require('path');
 
-// Register User
+
 exports.register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password } = req.body;

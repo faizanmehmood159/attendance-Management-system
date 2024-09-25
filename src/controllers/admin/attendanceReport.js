@@ -40,7 +40,6 @@ exports.generateUserReport = async (req, res, next) => {
       attendanceRecords,
     };
 
-    // Insert the report into the user_report table
     await UserReport.insertUserReport(report);
 
     res.status(200).json({

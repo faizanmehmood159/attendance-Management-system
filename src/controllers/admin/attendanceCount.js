@@ -1,4 +1,4 @@
-// controllers/admin/leaveController.js
+
 const Attendance = require('../../models/attendanceModel');
 const  ApiError  = require('../../utils/apiError');
 
@@ -22,7 +22,7 @@ exports.applyLeave = async (req, res, next) => {
 
 exports.getAttendanceCounts = async (req, res, next) => {
     try {
-      const studentId = req.params.id; // Get student ID from params
+      const studentId = req.params.id; 
       const attendanceCounts = await Attendance.getAttendanceCounts(studentId);
       
       res.status(200).json({

@@ -1,7 +1,7 @@
 const Attendance = require('../../models/attendanceModel');
 const { ApiError } = require('../../utils/apiError');
 
-// Mark Attendance
+
 exports.markAttendance = async (req, res, next) => {
   try {
     const studentId = req.userId; 

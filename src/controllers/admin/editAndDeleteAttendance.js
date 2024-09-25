@@ -32,7 +32,6 @@ exports.addAttendanceById = async (req, res, next) => {
         return res.status(400).json({ message: 'Status is required.' });
       }
 
-      // Ensure status is consistent with what the DB expects
       const validStatuses = ['present', 'Absent', 'leave'];
       if (!validStatuses.includes(status)) {
         return res.status(400).json({ message: 'Invalid status.' });
@@ -55,7 +54,7 @@ exports.addAttendanceById = async (req, res, next) => {
 
 exports.deleteAttendanceByStudentId = async (req, res, next) => {
     try {
-      const studentId = req.params.id; // Assuming you are passing studentId
+      const studentId = req.params.id; 
   
       const result = await Attendance.deleteAttendanceByStudentId(studentId);
       
@@ -70,19 +69,3 @@ exports.deleteAttendanceByStudentId = async (req, res, next) => {
     }
   };
 
-//   exports.deleteAttendance = async (req, res, next) => {
-//     try {
-//       const attendanceId = req.params.id; // Assuming you are passing attendanceId
-  
-//       const result = await Attendance.deleteAttendanceById(attendanceId);
-      
-//       if (result.affectedRows === 0) {
-//         return res.status(404).json({ message: 'Attendance record not found.' });
-//       }
-  
-//       res.status(200).json({ message: 'Attendance deleted successfully' });
-//     } catch (err) {
-//       console.error('Error deleting attendance:', err);
-//       next(new ApiError(500, 'Attendance deletion failed'));
-//     }
-//   };

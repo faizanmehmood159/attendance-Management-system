@@ -48,7 +48,7 @@ const Attendance = {
     `, [studentId]);
   
     return rows.reduce((acc, row) => {
-      acc[row.status] = row.count; // Build a counts object
+      acc[row.status] = row.count; 
       return acc;
     }, {});
   },

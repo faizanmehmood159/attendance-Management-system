@@ -1,6 +1,6 @@
 const pool = require('../../config/db');
 
-// Insert a user report into the user_report table
+
 exports.insertUserReport = async (report) => {
   const query = `
     INSERT INTO user_report (userId, name, email, profilePicture, totalDaysAttended, totalDaysAbsents, totalDaysLeaves, grade, attendanceRecords)
@@ -15,8 +15,8 @@ exports.insertUserReport = async (report) => {
     report.totalDaysAbsents,
     report.totalDaysLeaves,
     report.grade,
-    JSON.stringify(report.attendanceRecords) // Convert attendanceRecords to JSON string
-  ];
+    JSON.stringify(report.attendanceRecords) 
+    ];
 
   await pool.query(query, values);
 };
